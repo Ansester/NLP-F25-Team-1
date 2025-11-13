@@ -6,11 +6,15 @@ PYTHON := /opt/anaconda3/bin/python
 
 
 DATA_DIR := data/processed
-RAW := data/raw/comi_lingua.jsonl
+RAW := data/raw
 MODEL := xlm-roberta-base
 OUTPUT := outputs/xlmr
 RESULTS := results
-ROMAN_ONLY ?= 1
+ROMAN_ONLY ?= 0
+MAJORITY_ROMAN ?= 0
+TRANSLIT ?= 1
+ROMAN_ASCII ?= 1
+
 
 # Default target
 help:
@@ -27,13 +31,12 @@ install:
 	$(PYTHON) -m pip install -U -r requirements.txt
 
 # 1️⃣ Data preprocessing
-prep:
+ prep:
 	$(PYTHON) src/data_prep.py \
-		--input $(RAW) \
-		--output $(DATA_DIR) \
-		--model $(MODEL) \
-		--add_script_id true \
-		--roman_only $(ROMAN_ONLY) \
+		--input data/raw \
+		--output data/processed \
+		--model xlm-roberta-base \
+		--add_script_id true
 
 # 2️⃣ Fine-tuning
 train:
@@ -61,6 +64,10 @@ clean:
 	rm -rf $(DATA_DIR) $(OUTPUT) $(RESULTS) __pycache__ */__pycache__
 
 .PHONY: help install prep train evaluate test clean
+
+stats:
+	$(PYTHON) scripts/label_stats.py data/processed
+
 
 print-python:
 	@echo "PYTHON var: $(PYTHON)"
