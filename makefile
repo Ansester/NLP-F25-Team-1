@@ -77,3 +77,17 @@ print-python:
 print-shell:
 	@echo "SHELL: $(SHELL)"
 
+train-xlmr:
+	python -m src.train_flat_ner --model_name xlm-roberta-base --output_dir outputs/xlmr-flat
+
+train-mbert:
+	python -m src.train_flat_ner --model_name bert-base-multilingual-cased --output_dir outputs/mbert-flat
+	
+predict-test:
+	python -m src.predict_flat_ner --model_dir outputs/xlmr-flat --split test --out_path preds/xlmr_flat_test.jsonl
+
+eval-test:
+	python -m scripts.eval_flat --pred_path preds/xlmr_flat_test.jsonl --out_dir eval/xlmr-flat
+
+errors:
+	python -m scripts.error_slices --pred_path preds/xlmr_flat_test.jsonl --top_k 30

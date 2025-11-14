@@ -5,6 +5,7 @@ seqeval>=1.2.2
 regex>=2024.9.11
 numpy>=1.26.0
 indic-transliteration==2.3.75
+transformers>=4.30
 
 # Training/runtime
 torch           # install a CUDA/CPU build suitable for your machine
